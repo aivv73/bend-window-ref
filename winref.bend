@@ -1,8 +1,9 @@
 # Export a Bend-owned window's X11 display name and resource ID without transferring ownership.
 # Apache-2.0. Derived from aivv73/bend commit c1b8aae67d49342efe07c0581179f0f1de152bf7.
-# Native bridge validated on Bend 2.0.37, Linux/X11. JS and macOS return ENOTSUP.
+# Native bridge validated on Bend 2.0.39, Linux/X11. JS and macOS return ENOTSUP.
 # BendWin is a runtime internal. Revalidate this bridge after compiler updates.
-# Import bend-window-ref@0.1.0.0/winref.bend as W, then call W.WinRef.export(window).
+# Import bend-window-ref@0.1.0.1/winref.bend as W, then call W.WinRef.export(window).
+# On Bend 2.0.39, use Window.frame so the native runtime's event constructors are included.
 # The same affine owner returns outside Result on success and failure.
 # X11WindowRef is copyable data, owns no resource, and cannot recreate a Window.
 # XSync publishes prior X11 requests without discarding queued events.
