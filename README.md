@@ -23,7 +23,14 @@ The printed values depend on your X server.
 
 ## Use the library
 
-Keep `winref.bend`, `winref.c`, and `winref.js` together. Import the local module into your application:
+Import the published package from [BendHub](https://hub.bend-lang.com/n/bend-window-ref):
+
+```python
+import Base
+import bend-window-ref@0.1.0.1/winref.bend as W
+```
+
+For local use, keep `winref.bend`, `winref.c`, and `winref.js` together and import the local module:
 
 ```python
 import Base
