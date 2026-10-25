@@ -2,7 +2,7 @@
 
 Export a Bend-owned window's X11 display name and resource ID without transferring ownership.
 
-Validated with Bend 2.0.37 on Linux with X11. JavaScript and unsupported native backends return `ENOTSUP`.
+Validated with Bend 2.0.39 on Linux with X11. JavaScript and unsupported native backends return `ENOTSUP`.
 The bridge uses Bend's internal `BendWin` representation, so revalidate it after compiler updates.
 
 ## Run the example
@@ -17,7 +17,7 @@ cd bend-window-ref
 bend examples/export.bend
 ```
 
-The example opens a 64x48 window, exports its reference, then renames the window using the returned owner.
+The example opens a 64x48 window, draws an initial frame, exports its reference, then renames the window using the returned owner.
 It prints the display name and decimal window ID on separate lines, waits three seconds, and closes the window.
 The printed values depend on your X server.
 
@@ -39,6 +39,9 @@ IO(Window & Result<&1, &1, U32 & String, W.WindowRef>)
 Use `IO.bind` to receive the window alongside the result. The same affine owner returns on success and failure.
 The result contains either `Done{W.X11WindowRef{display, id}}` or `Fail{(code, message)}`.
 See [the example](examples/export.bend) for a complete program.
+
+Bend 2.0.39's native window runtime requires event constructors that are omitted when a program only opens and closes a window.
+Use `Window.frame` in window programs to include them; the example draws one frame before exporting.
 
 `WindowRef` is copyable data. It owns no resource and cannot recreate a Bend `Window`.
 A consumer needs access to the same X server. The reference expires when its owner closes the window, and X11 can reuse its ID afterward.
@@ -66,7 +69,7 @@ xvfb-run -a ./scripts/check.sh
 It does not prove the foreign C implementation. Compilation and the X11 integration check validate the native bridge separately.
 Event preservation, ID reuse, and all error paths still require further runtime validation.
 Window effects share Xlib state and run on Bend's IO thread.
-CI uses Bend 2.0.37 with a verified release checksum.
+CI uses Bend 2.0.39 with a verified release checksum.
 
 ## Source and license
 
