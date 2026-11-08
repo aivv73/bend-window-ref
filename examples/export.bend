@@ -23,16 +23,11 @@ def exported(pair: Window & Result<&1, &1, U32 & String, W.WindowRef>) -> IO(Uni
     IO.sleep(3000)
     Window.close(window)
 
-def framed(frame: Window & Image & List<Event>) -> IO(Unit):
-  (window, image, events) = frame
-  IO.bind(Window & Result<&1, &1, U32 & String, W.WindowRef>, Unit,
-    W.WinRef.export(window), exported)
-
 def opened(result: Result<&1, &1, U32 & String, Window>) -> IO(Unit):
   match result:
     case Done{window}:
-      IO.bind(Window & Image & List<Event>, Unit,
-        Window.frame(window, Pix{0}), framed)
+      IO.bind(Window & Result<&1, &1, U32 & String, W.WindowRef>, Unit,
+        W.WinRef.export(window), exported)
     case Fail{(code, message)}:
       IO.die(Unit, code, message)
 
