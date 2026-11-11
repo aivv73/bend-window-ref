@@ -50,7 +50,7 @@ control.verify('export', sys.argv[3], pathlib.Path(sys.argv[4]))
         if result.returncode == 0:
             raise SystemExit(f'FAIL: PYTHONOPTIMIZE={optimization} accepted a real 65x48 window as 64x48; evidence: {evidence}')
         errors = (evidence/'export.stderr').read_text()
-        if 'AssertionError' not in errors or '(width.value, height.value) == (64, 48)' not in errors:
+        if 'RuntimeError: Unexpected window dimensions: expected 64x48, got 65x48' not in errors:
             raise SystemExit(f'Wrong failure under PYTHONOPTIMIZE={optimization}: {errors}')
         if report['status'] != 'failed' or not all(report['cleanup'].values()):
             raise SystemExit(f'Failure cleanup or evidence preservation broke: {report}')
