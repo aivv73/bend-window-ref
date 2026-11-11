@@ -1,0 +1,27 @@
+---
+title: "Export preserves the owner"
+---
+stateDiagram-v2
+  state "Legend" as legend {
+    lg0: active
+    lg1: success
+    lg2: failure
+  }
+  class lg0 blue
+  class lg1 teal
+  class lg2 orange
+  s0: Window owned by caller
+  s1: Owner returned with ENOTSUP
+  s2: Owner returned with EIO
+  s3: Owner returned with EOVERFLOW
+  s4: Owner returned with synchronized reference
+  [*] --> s0
+  s0 --> s1: export fails
+  s0 --> s4: export reference
+  s0 --> s2: export fails
+  s0 --> s3: export fails
+  class s0 blue
+  class s1 orange
+  class s2 orange
+  class s3 orange
+  class s4 teal
