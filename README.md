@@ -16,12 +16,15 @@ Run this from a graphical X11 session with `DISPLAY` set:
 ```sh
 git clone https://github.com/aivv73/bend-window-ref.git
 cd bend-window-ref
-bend examples/export.bend
+mkdir -p build
+bend examples/export.bend -o build/export
+./build/export
 ```
 
 The example opens a 64x48 window, exports its reference, then renames the window using the returned owner.
 It prints the display name and decimal window ID on separate lines, waits three seconds, and closes the window.
 The printed values depend on your X server.
+Build the native executable as shown above. With Bend 2.0.40, running `bend examples/export.bend` directly uses the JavaScript runtime and fails at `Window.open` with `ENOTSUP`.
 
 ## Use the library
 
@@ -77,6 +80,14 @@ It does not prove the foreign C implementation. Compilation and the X11 integrat
 Event preservation, ID reuse, and all error paths still require further runtime validation.
 Window effects share Xlib state and run on Bend's IO thread.
 CI uses Bend 2.0.40 with a verified release checksum.
+
+## Verify the real user paths
+
+Use the [bend-window-ref verification skill](.agents/skills/verify-bend-window-ref/SKILL.md) to drive the native example, observe reference expiry, and check unsupported JavaScript execution. It starts an isolated Xvfb display and retains evidence after cleanup.
+
+## Verify the state machines
+
+See [the formal verification guide](verification/README.md) for five subsystem skills, TLA+ models, executable probes, and statecharts. The strict check reports the documented lifetime, explicit-cleanup, and read-deadline counterexamples.
 
 ## Source and license
 

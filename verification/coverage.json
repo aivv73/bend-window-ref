@@ -1,0 +1,37 @@
+{
+  "sync_commit": "912b48b42be76de4d5adb405917888fa450c1daa",
+  "subsystems": {
+    "bridge": {
+      "sources": {
+        "winref.c": "81c717e05daa3111e5212a6949e33a42e0f06d0104f538a3172de026c2b924da",
+        "winref.js": "35ed80b2058527c2c36f5e2980ea006e2638e030b49d35dbeddba85d4d53ba7e",
+        "winref.bend": "65f2ecddd4201dac365db2088095aea73b68ed2a19d21a3b19354a9fb913dee9",
+        "LAWS.bend": "956690ef67e48c61a13eab27cada865ef7ffe8ae925a1e930e271569a18bfb29"
+      }
+    },
+    "references": {
+      "sources": {
+        "winref.bend": "65f2ecddd4201dac365db2088095aea73b68ed2a19d21a3b19354a9fb913dee9",
+        "winref.c": "81c717e05daa3111e5212a6949e33a42e0f06d0104f538a3172de026c2b924da",
+        "LAWS.bend": "956690ef67e48c61a13eab27cada865ef7ffe8ae925a1e930e271569a18bfb29"
+      }
+    },
+    "example": {
+      "sources": {
+        "examples/export.bend": "6cfdc84d530b1cc4a7f655e9e22732efe7078f832ab99b341a93359dc36921dd"
+      }
+    },
+    "observer": {
+      "sources": {
+        "scripts/check_x11.py": "95895104c82df867d23dde388e3f69ae44c2eda2c644c5a557b11312e2d9716e",
+        "examples/export.bend": "6cfdc84d530b1cc4a7f655e9e22732efe7078f832ab99b341a93359dc36921dd"
+      }
+    },
+    "pipeline": {
+      "sources": {
+        "scripts/check.sh": "b59e9344895101a8f4ea87169cea320ee2c26544b504ef153259d96f8300a826",
+        ".github/workflows/check.yml": "2a6e440556510645d4b3d8c6f2f7350db19880f347f4f550c171915918c9f4a1"
+      }
+    }
+  }
+}

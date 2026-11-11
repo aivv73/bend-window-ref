@@ -1,0 +1,56 @@
+---
+title: "Observe an exported reference"
+---
+stateDiagram-v2
+  state "Legend" as legend {
+    lg0: error
+    lg1: success
+    lg2: active
+    lg3: Breaks ReadHasDeadline
+    lg4: Path to the ReadHasDeadline bug
+  }
+  class lg0 pink
+  class lg1 teal
+  class lg2 blue
+  class lg3 breaks
+  class lg4 bugPath
+  s0: Wait for display line
+  s1: Waiting without a deadline
+  s2: Wait for ID line
+  s3: Stop and reap producer
+  s4: Read reference
+  s5: Resources released
+  s6: Inspect window
+  s7: Release resources after lookup failure
+  s8: Geometry checked
+  s9: Observer disconnected
+  [*] --> s0
+  s0 --> s1: producer stops sending output
+  s0 --> s2: display arrives
+  s0 --> s3: reading or parsing fails
+  s2 --> s1: producer stops sending output
+  s2 --> s3: reading or parsing fails
+  s2 --> s4: ID arrives
+  s3 --> s5: reap producer
+  s4 --> s3: connection fails or reading or parsing fails
+  s4 --> s6: connect to display
+  s6 --> s7: lookup fails
+  s7 --> s3: close observer connection
+  s6 --> s8: geometry matches
+  s8 --> s9: close observer connection
+  s9 --> s3: exit deadline expires
+  s9 --> s5: producer exits
+  classDef breaks fill:#ffecee,stroke:#e72e3b,stroke-width:2.5px,color:#cd2834
+  class s0 blue
+  class s0 bugPath
+  class s1 pink
+  class s1 breaks
+  class s1 bugPath
+  class s2 blue
+  class s3 blue
+  class s4 blue
+  class s5 teal
+  class s6 blue
+  class s7 blue
+  class s8 blue
+  class s9 blue

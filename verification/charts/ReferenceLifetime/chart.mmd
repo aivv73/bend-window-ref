@@ -1,0 +1,37 @@
+---
+title: "A reference outlives its window"
+---
+stateDiagram-v2
+  state "Legend" as legend {
+    lg0: expired
+    lg1: live
+    lg2: Breaks UnchangedReferenceIsLive or UnchangedReferenceNeverAliases
+    lg3: Path to the UnchangedReferenceIsLive or UnchangedReferenceNeverAliases bug
+  }
+  class lg0 orange
+  class lg1 teal
+  class lg2 breaks
+  class lg3 bugPath
+  s0: Window open
+  s1: Reference points to original window
+  s2: Unchanged reference points to no window
+  s3: Both copies point to original window
+  s4: Unchanged reference points to another window
+  [*] --> s0
+  s0 --> s1: export reference
+  s1 --> s2: owner closes window
+  s1 --> s3: copy reference
+  s2 --> s4: X11 reuses the ID
+  s3 --> s2: owner closes window
+  classDef breaks fill:#ffecee,stroke:#e72e3b,stroke-width:2.5px,color:#cd2834
+  class s0 teal
+  class s0 bugPath
+  class s1 teal
+  class s1 bugPath
+  class s2 orange
+  class s2 breaks
+  class s2 bugPath
+  class s3 teal
+  class s4 orange
+  class s4 breaks
+  class s4 bugPath

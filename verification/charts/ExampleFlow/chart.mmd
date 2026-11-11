@@ -1,0 +1,59 @@
+---
+title: "Export a window reference"
+---
+stateDiagram-v2
+  state "Legend" as legend {
+    lg0: error
+    lg1: success
+    lg2: active
+    lg3: Breaks EveryExitExplicitlyCloses
+    lg4: Path to the EveryExitExplicitlyCloses bug
+  }
+  class lg0 pink
+  class lg1 teal
+  class lg2 blue
+  class lg3 breaks
+  class lg4 bugPath
+  s0: Start
+  s1: Could not open window
+  s2: Window open
+  s3: Reference exported
+  s4: Export failed#59; owner returned
+  s5: Window renamed
+  s6: Renamed after export failure
+  s7: Display printed
+  s8: Exited without explicit close
+  s9: Reference printed
+  s10: Three seconds elapsed
+  s11: Window explicitly closed
+  [*] --> s0
+  s0 --> s1: opening fails
+  s0 --> s2: open window
+  s2 --> s3: export succeeds
+  s2 --> s4: export fails
+  s3 --> s5: rename returned window
+  s4 --> s6: rename returned window
+  s5 --> s7: print display
+  s6 --> s8: report error and exit
+  s7 --> s9: print ID
+  s9 --> s10: wait three seconds
+  s10 --> s11: close window
+  classDef breaks fill:#ffecee,stroke:#e72e3b,stroke-width:2.5px,color:#cd2834
+  class s0 blue
+  class s0 bugPath
+  class s1 blue
+  class s2 blue
+  class s2 bugPath
+  class s3 blue
+  class s4 blue
+  class s4 bugPath
+  class s5 blue
+  class s6 blue
+  class s6 bugPath
+  class s7 blue
+  class s8 pink
+  class s8 breaks
+  class s8 bugPath
+  class s9 blue
+  class s10 blue
+  class s11 teal

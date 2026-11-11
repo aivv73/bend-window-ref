@@ -1,0 +1,24 @@
+---
+title: "Verify the library"
+---
+stateDiagram-v2
+  s0: Check Bend proofs
+  s1: Create build directory
+  s2: Finished with no build directory
+  s3: Install cleanup trap
+  s4: Build native example
+  s5: Remove build directory
+  s6: Build JavaScript example
+  s7: Run native observer
+  [*] --> s0
+  s0 --> s1: proofs pass
+  s0 --> s2: command fails
+  s1 --> s2: command fails
+  s1 --> s3: directory created
+  s3 --> s4: cleanup registered
+  s4 --> s5: command fails
+  s4 --> s6: native build succeeds
+  s5 --> s2: cleanup runs
+  s6 --> s7: JavaScript build succeeds
+  s6 --> s5: command fails
+  s7 --> s5: command fails or integration check succeeds

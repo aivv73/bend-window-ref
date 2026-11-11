@@ -1,0 +1,3 @@
+export const title = 'Verify the library';
+export const state = v => ({proof:'Check Bend proofs',allocate:'Create build directory',trap:'Install cleanup trap',native:'Build native example',javascript:'Build JavaScript example',check:'Run native observer',cleanup:'Remove build directory',finished:'Finished with no build directory'})[v.phase];
+export const step = action => ({Proof:'proofs pass',Allocate:'directory created',InstallTrap:'cleanup registered',NativeBuild:'native build succeeds',JsBuild:'JavaScript build succeeds',Check:'integration check succeeds',Fail:'command fails',Cleanup:'cleanup runs',Finished:'finished'})[action];
