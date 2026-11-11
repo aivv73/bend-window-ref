@@ -1,12 +1,12 @@
 // Render reviewed statechart outputs with Pele 1.9.0, installed outside this repo.
 import fs from 'node:fs';
 import path from 'node:path';
-import { pathToFileURL } from 'node:url';
+import { fileURLToPath, pathToFileURL } from 'node:url';
 const modulePath = path.resolve(process.argv[2]);
 const packagePath = path.resolve(path.dirname(modulePath),'../package.json');
 if (JSON.parse(fs.readFileSync(packagePath,'utf8')).version !== '1.9.0') throw Error('Use pele@1.9.0');
 const { render } = await import(pathToFileURL(modulePath).href);
-const root = path.resolve(import.meta.dirname, 'charts');
+const root = fileURLToPath(new URL('charts/', import.meta.url));
 const entries = [
  ['ExampleFlow','Export a reference','The error branch returns the owner, renames the window, then exits before explicit close. Process exit may still reclaim the X11 resource.'],
  ['ReferenceLifetime','Use a borrowed reference','Expiry and ID reuse break consumer assumptions, not the library contract. “No window” breaks the live-reference assumption; “another window” breaks both assumptions. Both were replayed on Xvfb.'],

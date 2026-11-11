@@ -122,6 +122,8 @@ def verify(feature, xvfb, destination):
         scratch = Path(work.name)
         report['scratch'] = str(scratch)
         env = dict(os.environ, TMPDIR=str(scratch))
+        # The observers use assertions for validation and X11 calls.
+        env.pop('PYTHONOPTIMIZE', None)
         # Readiness is checked on a server we started; the caller's DISPLAY is never driven.
         if native:
             server_log = (evidence/'xvfb.stderr').open('w')

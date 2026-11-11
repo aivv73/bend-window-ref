@@ -88,4 +88,6 @@ After every attempt, read `summary.json`: native runs must record `xvfb_reaped: 
 
 The only shipped helper is executable `scripts/control.py`. Its public commands are `doctor` and `run`; invoke them as shown above. `--help` and `run --help` list the supported selectors and options. The helper reuses the repository's X11 observer and lifetime replay rather than replacing them.
 
+Child processes do not inherit `PYTHONOPTIMIZE`, because the observers rely on Python assertions. To check that wrong geometry is still rejected at optimization levels 0, 1, and 2, run `python3 verification/probes/optimized_observer.py` with Xvfb on PATH or `WINREF_XVFB` configured. The probe changes only a disposable copy of the example and keeps evidence under `verification/results/optimized-observer/`.
+
 For maintenance, use `/maintain-verification-skill` to keep the feature map aligned with the app. Keep formal-model maintenance separate from these real-user journeys.

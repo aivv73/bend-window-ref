@@ -25,6 +25,8 @@ AREAS = {
 
 
 def run(args, *, cwd=None, env=None, timeout=30):
+    env = dict(os.environ if env is None else env)
+    env.pop('PYTHONOPTIMIZE', None)
     result = subprocess.run([str(x) for x in args], cwd=cwd, env=env, text=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, timeout=timeout)
     if result.returncode:
         raise RuntimeError(f'Command failed ({result.returncode}): {args}\n{result.stdout}')
@@ -36,7 +38,7 @@ def toolchain():
     java = os.environ.get('JAVA') or shutil.which('java') or (str(cached_java) if cached_java.exists() else None)
     if not java:
         raise RuntimeError('Install Java 11 or later, or set JAVA to its executable. Validated with Temurin 21.0.8+9.')
-    jar = Path(os.environ.get('TLA2TOOLS', str(Path.home()/'.cache/bend-window-ref-verification/tla2tools-1.7.4.jar')))
+    jar = Path(os.environ.get('TLA2TOOLS', str(Path.home()/'.cache/bend-window-ref-verification/tla2tools-1.7.4.jar'))).resolve()
     if not jar.exists():
         jar.parent.mkdir(parents=True, exist_ok=True)
         # Verify before publishing the download to the shared cache.
@@ -195,6 +197,6 @@ def main():
 
 if __name__ == '__main__':
     try: sys.exit(main())
-    except (RuntimeError,subprocess.TimeoutExpired) as exc:
+    except (RuntimeError,OSError,subprocess.TimeoutExpired) as exc:
         print(str(exc),file=sys.stderr)
         sys.exit(2)
