@@ -4,13 +4,13 @@ import ctypes as c
 import ctypes.util
 import io
 import json
-import runpy
+from pathlib import Path
 import subprocess
 import sys
 from unittest.mock import patch
 
 
-def check(source, scenario):
+def check(source, scenario, optimization):
     events = []
     resources = {"display": False, "name": False, "child": "running"}
     class Function:
@@ -21,7 +21,8 @@ def check(source, scenario):
             events.append('readline')
             return super().readline(*args)
     class Child:
-        stdout = Stream(':fixture\n' + ('bad' if scenario == 'parse' else '7') + '\n')
+        stdout = Stream(('' if scenario == 'empty-display' else ':fixture') + '\n' +
+                        {'parse': 'bad', 'zero-id': '0', 'negative-id': '-1'}.get(scenario, '7') + '\n')
         def __enter__(self): events.append('spawn'); return self
         def __exit__(self, *args):
             # Popen.__exit__ also waits. A live child in an error case would hang.
@@ -61,16 +62,34 @@ def check(source, scenario):
     for name, fn in [('XOpenDisplay', open_display), ('XFetchName', fetch), ('XFree', free), ('XGetGeometry', geometry), ('XCloseDisplay', close)]:
         setattr(xlib, name, Function(fn))
     error = None
-    with patch.object(c, 'CDLL', return_value=xlib), patch.object(ctypes.util, 'find_library', return_value='fixture'), patch.object(subprocess, 'Popen', return_value=Child()), patch.object(sys, 'argv', [str(source), 'fixture']), contextlib.redirect_stdout(io.StringIO()):
-        try: runpy.run_path(str(source), run_name='__main__')
-        except (AssertionError, ValueError, subprocess.TimeoutExpired) as exc: error = type(exc).__name__
+    output = io.StringIO()
+    with patch.object(c, 'CDLL', return_value=xlib), patch.object(ctypes.util, 'find_library', return_value='fixture'), patch.object(subprocess, 'Popen', return_value=Child()), patch.object(sys, 'argv', [str(source), 'fixture']), contextlib.redirect_stdout(output):
+        try: exec(compile(Path(source).read_text(), str(source), 'exec', optimize=optimization), {'__name__': '__main__', '__file__': str(source)})
+        except (AssertionError, RuntimeError, ValueError, subprocess.TimeoutExpired) as exc: error = type(exc).__name__
     assert len(events) > 2 and events[0] == 'spawn', events
     assert resources == {'display': False, 'name': False, 'child': 'reaped'}, (scenario, resources, events)
     assert (error is None) == (scenario == 'success'), (scenario, error)
-    if scenario == 'success':
-        assert events.index('free-name') < events.index('disconnect') < events.index('timed-wait')
-    print(json.dumps({'scenario': scenario, 'events': events, 'error': error}))
+    expected = ['spawn', 'readline', 'readline']
+    if scenario not in {'parse', 'empty-display', 'zero-id', 'negative-id'}:
+        expected += ['connect']
+        if scenario != 'connect':
+            expected += ['fetch-name']
+            if scenario != 'fetch':
+                expected += ['free-name']
+                if scenario != 'title':
+                    expected += ['geometry']
+            expected += ['disconnect']
+            if scenario in {'success', 'timeout', 'exit-code'}:
+                expected += ['timed-wait']
+    if scenario not in {'success', 'exit-code'}:
+        expected += ['kill', 'wait']
+    expected += ['wait']
+    assert events == expected, (scenario, optimization, events, expected)
+    passed = "PASS: exported display and ID resolve to the owner's renamed 64x48 window\n"
+    assert output.getvalue() == (passed if scenario == 'success' else ''), (scenario, optimization, output.getvalue())
+    print(json.dumps({'optimization': optimization, 'scenario': scenario, 'events': events, 'error': error}))
 
 if __name__ == '__main__':
-    for scenario in ['success','parse','connect','fetch','title','geometry','geometry-size','timeout','exit-code']:
-        check(sys.argv[1], scenario)
+    for optimization in [0, 1, 2]:
+        for scenario in ['success','parse','empty-display','zero-id','negative-id','connect','fetch','title','geometry','geometry-size','timeout','exit-code']:
+            check(sys.argv[1], scenario, optimization)

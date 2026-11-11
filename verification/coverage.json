@@ -23,7 +23,7 @@
     },
     "observer": {
       "sources": {
-        "scripts/check_x11.py": "95895104c82df867d23dde388e3f69ae44c2eda2c644c5a557b11312e2d9716e",
+        "scripts/check_x11.py": "24258d351fce62fb0691f42d279fec846f70cc0667c839b37af50019c203adc6",
         "examples/export.bend": "6cfdc84d530b1cc4a7f655e9e22732efe7078f832ab99b341a93359dc36921dd"
       }
     },
